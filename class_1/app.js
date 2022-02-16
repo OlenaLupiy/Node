@@ -73,20 +73,25 @@ fs.readdir(path.join(__dirname, 'task3'),(err, files) => {
         console.log(err)
         throw err
     } files.forEach(file =>{
-        if (file.includes('.txt')){
-            fs.truncate(path.join(__dirname, 'task3', file), err1 => {
-                if (err1){
-                    console.log(err1)
-                    throw err1
-                }
-            })
-        }else {
-            fs.rename(path.join(__dirname, 'task3', file), path.join(__dirname, 'task3', `_new${file}`), (err2 => {
-                if (err2){
-                    console.log(err2)
-                    throw err2
-                }
-            }))
-        }
+        fs.stat(path.join(__dirname, 'task3', file),((err1, stats) => {
+            if (err1){
+                console.log(err1)
+                throw err1
+            } if (stats.isFile()){
+                fs.truncate(path.join(__dirname, 'task3', file),(err2 => {
+                    if(err2){
+                        console.log(err2)
+                        throw err2
+                    }
+                }))
+            }else {
+                fs.rename(path.join(__dirname, 'task3', file), path.join(__dirname, 'task3', `_new${file}`), (err3 => {
+                    if(err3){
+                        console.log(err3)
+                        throw err3
+                    }
+                }))
+            }
+        }))
     })
 })
